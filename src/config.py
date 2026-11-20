@@ -35,7 +35,7 @@ RANDOM_SEED = 20261120
 
 # The common grid of obligor counts named in Section 4.1 ("portfolios
 # consisting of 2 to 2000 obligors") and illustrated by the explicit n-values
-# listed in experiment descriptions of Figures 1-3, 5 and 6.
+# shown on the x-axes of Figures 1-3, 5 and 6.
 N_GRID_FULL = [
     2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
     30, 40, 50, 60, 70, 80, 90, 100, 200, 300, 400, 500, 600, 700, 800,
@@ -68,7 +68,7 @@ N_GRID_EXP2 = N_GRID_FULL
 
 P0_GRID_EXP3 = [0.0005, 0.002, 0.005, 0.01, 0.02, 0.05, 0.10, 0.20]
 
-# Figure 6 is drawn for n from 2 to 200 (experiment description, data_requirements).
+# Figure 6 is drawn for n from 2 to 200 (Section 3.2.2).
 N_GRID_EXP3 = [n for n in N_GRID_FULL if n <= 200]
 
 # ---------------------------------------------------------------------------
@@ -119,11 +119,16 @@ PD_BY_RATING = {"A": 0.001, "B": 0.002, "C": 0.015, "D": 0.020}
 EAD_EXP5 = 100.0
 LGD_EXP5 = 0.4
 
-# Asset correlation matrix between rating grades (Table 5), used only to
-# convert into default correlations via Eq. (24) for the analytical
-# Extended-Vasicek aggregation; it is not the within-rating correlation used
-# to drive the Monte Carlo simulation (that comes from Eq. 22, see Section
-# 5 and the experiment's implementation_notes).
+# Asset correlation matrix between rating grades (Table 5), used to convert
+# into default correlations via Eq. (24) for the analytical Extended-Vasicek
+# aggregation. The paper does not state whether the Monte Carlo simulation
+# itself draws a correlated factor per rating grade from this matrix or
+# shares one systematic factor across all rating grades (Section 5); the
+# single shared-factor model reproduces Table 6's simulated RWA for Pi_1-Pi_3
+# almost exactly (see results/RESULTS.md, "Deviations from the paper"), so it
+# is used as the simulation's systematic-factor model, while this matrix is
+# not used to drive the Monte Carlo simulation (that uses the within-rating
+# correlation from Eq. 22 only).
 ASSET_CORRELATION_TABLE5 = {
     ("A", "A"): 1.00, ("A", "B"): 0.25, ("A", "C"): 0.15, ("A", "D"): 0.10,
     ("B", "A"): 0.25, ("B", "B"): 1.00, ("B", "C"): 0.17, ("B", "D"): 0.19,

@@ -52,22 +52,43 @@ def simulate_multirating_portfolio(
     rho_by_rating: dict[str, float],
     n_sims: int,
     rng: np.random.Generator,
+    sector_correlation: dict[tuple[str, str], float] | None = None,
 ) -> np.ndarray:
     """Simulate n_sims draws of the total loss fraction for a portfolio with
-    several rating grades, sharing one systematic factor f per run (single
-    factor model, Section 2); each rating grade uses its own within-rating
-    correlation rho_I from Eq. (22). Returns the fraction of defaulted
-    obligors in the whole portfolio, x = (sum_I d_I) / n_Total (Section 5).
+    several rating grades (Section 5), sharing one systematic factor f per
+    run across all rating grades (single-factor model, Section 2); each
+    rating grade uses its own within-rating correlation rho_I from Eq. (22).
+    Returns the fraction of defaulted obligors in the whole portfolio,
+    x = (sum_I d_I) / n_Total.
+
+    An optional ``sector_correlation`` draws a separate, correlated factor
+    f_I per rating grade instead (via a Cholesky decomposition of that
+    matrix), which was tested against the asset-correlation matrix of
+    Table 5 and found to reproduce Table 6 markedly worse than the default
+    shared-factor model (see results/RESULTS.md, "Deviations from the
+    paper"); it is kept only for that comparison and is not used by the
+    experiment.
     """
     n_total = sum(composition.values())
     if n_total < 1:
         raise ValueError("portfolio must contain at least one obligor")
-    f = rng.standard_normal(n_sims)
+    ratings = [r for r in composition if composition[r] > 0]
+    if sector_correlation is None:
+        f_global = rng.standard_normal(n_sims)
+        f_by_rating = {r: f_global for r in ratings}
+    else:
+        corr = np.array(
+            [[sector_correlation[(i, j)] for j in ratings] for i in ratings]
+        )
+        chol = np.linalg.cholesky(corr)
+        z = rng.standard_normal((n_sims, len(ratings)))
+        f = z @ chol.T
+        f_by_rating = {r: f[:, idx] for idx, r in enumerate(ratings)}
+
     total_defaults = np.zeros(n_sims, dtype=np.int64)
-    for rating, n_i in composition.items():
-        if n_i <= 0:
-            continue
+    for rating in ratings:
+        n_i = composition[rating]
         tau_i = tau_from_pd(pd_by_rating[rating])
-        p_f_i = conditional_default_probability(f, tau_i, rho_by_rating[rating])
+        p_f_i = conditional_default_probability(f_by_rating[rating], tau_i, rho_by_rating[rating])
         total_defaults += rng.binomial(n_i, p_f_i)
     return total_defaults / n_total

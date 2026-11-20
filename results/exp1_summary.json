@@ -1,8 +1,8 @@
 {
-  "n_sims":50000,
+  "n_sims":500000,
   "n_configurations":222,
-  "median_sigma_rel_err":0.0118594303,
-  "max_sigma_rel_err_n_ge_30":0.0921232465,
+  "median_sigma_rel_err":0.0032880498,
+  "max_sigma_rel_err_n_ge_30":0.0314927344,
   "n_grid":[
     2,
     3,

@@ -33,7 +33,7 @@ def one_obligor_central_moment(m: int, p0: float) -> float:
 
     x is 0 with probability (1-P0) and 1 with probability P0, so
     mu_m,x,1 = (1-P0)(0-P0)^m + P0(1-P0)^m = (1-P0)(-P0)^m + P0(1-P0)^m.
-    This reduces to the values quoted in the implementation notes:
+    This reduces to the binomial(n=1) central moments:
     mu_2 = P0(1-P0), mu_3 = P0(1-P0)(1-2P0), mu_4 = P0(1-P0)(1-3P0+3P0^2).
     """
     return (1.0 - p0) * (-p0) ** m + p0 * (1.0 - p0) ** m

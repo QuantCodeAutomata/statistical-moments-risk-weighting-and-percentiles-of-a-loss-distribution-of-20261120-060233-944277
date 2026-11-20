@@ -3,9 +3,9 @@
 Implements the BCBS correlation formula (Eq. 22), the single-factor default
 threshold, the non-central Vasicek moments of Theorem 1 (Eq. 5), the Vasicek
 variance (Eq. 7) and the Vasicek percentile (Eq. 8). scipy.stats is used for
-the univariate and multivariate normal distribution functions, as suggested
-by the paper's implementation notes; no quantitative finance library offers
-these primitives, so the formulas themselves follow Theorem 1 directly.
+the univariate and multivariate normal distribution functions; no
+quantitative finance library offers these primitives, so the formulas
+themselves follow Theorem 1 directly.
 """
 
 from __future__ import annotations
