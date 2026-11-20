@@ -219,9 +219,16 @@ Artifacts: `results/exp5_table6_comparison.csv`,
   `<x>_sim` in `RWA_{alpha,sim} = 12.5 n_Total (x_{alpha,sim} - <x>_sim) LGD
   EAD` — replacing the simulated sample mean with the exact PD-weighted
   mean `sum_I f_I PD_I` changes `RWA_sim` by less than 0.01% for Pi_1, Pi_5
-  and Pi_6, so this is not the source either. The precise cause (for
-  example, an alternative cross-rating factor structure not specified in
-  the methodology) was not identified.
+  and Pi_6, so this is not the source either. (3) An alternative
+  cross-rating factor structure: replacing the single shared systematic
+  factor with four correlated factors drawn from the Table 5 asset-
+  correlation matrix (`simulate_multirating_portfolio(..., sector_correlation
+  =ASSET_CORRELATION_TABLE5)`, already implemented for this comparison) does
+  not close the gap either; on a 100,000-run slice it moves `RWA_sim` from
+  5311 to 4067 for Pi_5 (paper 4792) and from 7766 to 5216 for Pi_6 (paper
+  6638) — i.e. it overshoots below the paper's value by a comparable margin
+  to the single-factor model's overshoot above it, rather than converging
+  on it. The precise cause was not identified.
 - **Cornish-Fisher central moments (Experiments 2 and 3).** The paper cites
   Lamb (2016) for the closed-form central moments of the Cornish-Fisher
   expansion but does not reproduce them. This implementation derives
