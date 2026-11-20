@@ -211,8 +211,17 @@ Artifacts: `results/exp5_table6_comparison.csv`,
   respectively). Because `RWA_EV`, which does not depend on this simulation
   choice, remains within 1% of the paper on the same two rows, the residual
   gap is localized to the Monte Carlo step and not to the Extended Vasicek
-  formula; the precise cause (for example, an alternative cross-rating
-  factor structure not specified in the methodology) was not identified.
+  formula. Two further candidate causes were checked and ruled out: (1)
+  Monte Carlo sampling noise at 500,000 runs — six independent re-runs of
+  Pi_5 and Pi_6 with different seeds give a coefficient of variation of
+  about 1.2% and 0.9% respectively on `RWA_sim`, an order of magnitude
+  below the observed 10%-15% gap; (2) the definition of the simulated mean
+  `<x>_sim` in `RWA_{alpha,sim} = 12.5 n_Total (x_{alpha,sim} - <x>_sim) LGD
+  EAD` — replacing the simulated sample mean with the exact PD-weighted
+  mean `sum_I f_I PD_I` changes `RWA_sim` by less than 0.01% for Pi_1, Pi_5
+  and Pi_6, so this is not the source either. The precise cause (for
+  example, an alternative cross-rating factor structure not specified in
+  the methodology) was not identified.
 - **Cornish-Fisher central moments (Experiments 2 and 3).** The paper cites
   Lamb (2016) for the closed-form central moments of the Cornish-Fisher
   expansion but does not reproduce them. This implementation derives
